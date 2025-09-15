@@ -11,4 +11,22 @@ describe "Rolando" {
     assert.equals([espadaDelDestino, libroDeHechizos], rolando.artefactosEnMochila())
 
   }
+
+  test "Castillo de piedra" {
+    
+    rolando.recolectarItem(espadaDelDestino)
+    rolando.recolectarItem(libroDeHechizos)
+    rolando.irHaciaHogar()
+
+    assert.equals([espadaDelDestino,libroDeHechizos], castilloDePiedra.artefactos())
+
+    rolando.recolectarItem(collarDivino)
+    rolando.irHaciaHogar()
+
+
+
+  }
+
+
+
 }
