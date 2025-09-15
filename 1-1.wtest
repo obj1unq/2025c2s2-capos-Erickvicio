@@ -1,0 +1,14 @@
+import capos.*
+
+describe "Rolando" {
+  test "mini aventura" {
+    
+    rolando.recolectarItem(espadaDelDestino)
+    rolando.recolectarItem(libroDeHechizos)
+
+    assert.throwsException({rolando.recolectarItem(collarDivino)})
+
+    assert.equals([espadaDelDestino, libroDeHechizos], rolando.artefactosEnMochila())
+
+  }
+}
