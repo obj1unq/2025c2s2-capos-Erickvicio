@@ -8,24 +8,52 @@ describe "Rolando" {
 
     assert.throwsException({rolando.recolectarItem(collarDivino)})
 
-    assert.equals([espadaDelDestino, libroDeHechizos], rolando.artefactosEnMochila())
+    assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.artefactosEnMochila())
 
   }
 
   test "Castillo de piedra" {
     
-    rolando.recolectarItem(espadaDelDestino)
-    rolando.recolectarItem(libroDeHechizos)
+    rolando.encontrarArtefacto(espadaDelDestino)
+    rolando.encontrarArtefacto(libroDeHechizos)
     rolando.irHaciaHogar()
 
-    assert.equals([espadaDelDestino,libroDeHechizos], castilloDePiedra.artefactos())
+    assert.equals(#{espadaDelDestino,libroDeHechizos}, castilloDePiedra.artefactos())
 
-    rolando.recolectarItem(collarDivino)
+    rolando.encontrarArtefacto(collarDivino)
     rolando.irHaciaHogar()
 
-
+    assert.equals(#{espadaDelDestino,libroDeHechizos,collarDivino}, castilloDePiedra.artefactos())
 
   }
+
+  test "Saber que artefactos tiene Rolando" {
+    
+    castilloDePiedra.añadirVariosItems(#{collarDivino, espadaDelDestino})
+    rolando.recolectarItem(armaduraDeAceroValyrio)
+
+    assert.equals(#{collarDivino, espadaDelDestino, armaduraDeAceroValyrio}, rolando.posesiones())
+
+  }
+
+  test "Historial de artefactos" {
+    
+    rolando.encontrarArtefacto(espadaDelDestino)
+    rolando.encontrarArtefacto(libroDeHechizos)
+    rolando.encontrarArtefacto(collarDivino)
+
+    rolando.irHaciaHogar()
+
+    rolando.encontrarArtefacto(armaduraDeAceroValyrio)
+    rolando.encontrarArtefacto(collarDivino)
+
+    assert.equals([espadaDelDestino,libroDeHechizos,collarDivino,armaduraDeAceroValyrio,collarDivino], rolando.historialDeArtefactosEncontrados())
+
+  }
+
+
+
+
 
 
 

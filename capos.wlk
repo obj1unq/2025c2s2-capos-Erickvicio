@@ -1,9 +1,22 @@
 object rolando {
     
     var property tamañoMochila = 2
-    const mochila = []
+    const mochila = #{}
+    const artefactosEncontrados = []
     const hogar = castilloDePiedra
     var property posActual = null
+
+    method historialDeArtefactosEncontrados() {
+      return artefactosEncontrados
+    }
+
+    method encontrarArtefacto(unArtefacto) {
+      artefactosEncontrados.add(unArtefacto)
+
+      if(self.tieneEspacioEnMochila()){
+        self.recolectarItem(unArtefacto)
+      }
+    }
 
     method recolectarItem(unItem) {
         self.validarRecolectarItem()
@@ -11,17 +24,17 @@ object rolando {
     }
 
     method validarRecolectarItem() {
-      if(mochila.size() >= tamañoMochila){
+      if(not self.tieneEspacioEnMochila()){
         self.error("La mochila no cuenta con suficiente espacio")
       }
     }
 
-    method artefactosEnMochila() {
-      return mochila.map( {item => item} )
+    method tieneEspacioEnMochila() {
+      return mochila.size() < tamañoMochila
     }
 
-    method artefactosTotales() {
-      return 
+    method artefactosEnMochila() {
+      return mochila
     }
 
     method guardarItemsEnHogar() {
@@ -37,6 +50,19 @@ object rolando {
 
     method estaEnHogar() {
       return posActual == hogar
+    }
+
+    method artefactosTotales() {
+      return self.posesiones()
+    }
+
+    method poseeElArtefacto(unItem) {
+       return self.posesiones().contains(unItem)
+      // return posesiones.contains(unItem)
+    }
+
+    method posesiones() {
+      return mochila.union(hogar.artefactos())
     }
 
     method validarGuardarItemsEnHogar() {
@@ -63,18 +89,18 @@ object armaduraDeAceroValyrio {
 //
 object castilloDePiedra {
 
-  const castilloDePiedra = [] 
+  const galeriaDeItems = #{} 
 
   method artefactos() {
-    return castilloDePiedra
+    return galeriaDeItems
   }
 
   method añadirItem(unItem) {
-    castilloDePiedra.add(unItem)
+    galeriaDeItems.add(unItem)
   }
 
   method añadirVariosItems(listDeItems) {
-    castilloDePiedra.addAll(listDeItems)
+    galeriaDeItems.addAll(listDeItems)
   }
   
 }
