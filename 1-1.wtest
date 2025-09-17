@@ -1,12 +1,12 @@
 import capos.*
 
 describe "Parte 1" {
-  test "mini aventura" {
+  test "Rolando" {
     
-    rolando.recolectarItem(espadaDelDestino)
-    rolando.recolectarItem(libroDeHechizos)
+    rolando.agregarArtefacto(espadaDelDestino)
+    rolando.agregarArtefacto(libroDeHechizos)
 
-    assert.throwsException({rolando.recolectarItem(collarDivino)})
+    assert.throwsException({rolando.agregarArtefacto(collarDivino)})
 
     assert.equals(#{espadaDelDestino, libroDeHechizos}, rolando.artefactosEnMochila())
 
@@ -30,7 +30,7 @@ describe "Parte 1" {
   test "Saber que artefactos tiene Rolando" {
     
     castilloDePiedra.añadirVariosItems(#{collarDivino, espadaDelDestino})
-    rolando.recolectarItem(armaduraDeAceroValyrio)
+    rolando.agregarArtefacto(armaduraDeAceroValyrio)
 
     assert.equals(#{collarDivino, espadaDelDestino, armaduraDeAceroValyrio}, rolando.posesiones())
 
@@ -47,15 +47,9 @@ describe "Parte 1" {
     rolando.encontrarArtefacto(armaduraDeAceroValyrio)
     rolando.encontrarArtefacto(collarDivino)
 
-    assert.equals([espadaDelDestino,libroDeHechizos,collarDivino,armaduraDeAceroValyrio,collarDivino], rolando.historialDeArtefactosEncontrados())
+    assert.equals([espadaDelDestino,libroDeHechizos,collarDivino,armaduraDeAceroValyrio,collarDivino], rolando.artefactosEncontrados())
 
   }
-
-
-
-
-
-
 
 }
 
@@ -64,9 +58,9 @@ describe "Parte 2" {
   method initialize() {
     rolando.poderBase(5)
     rolando.tamañoMochila(3)
-    rolando.recolectarItem(espadaDelDestino)
-    rolando.recolectarItem(armaduraDeAceroValyrio)
-    rolando.recolectarItem(collarDivino)
+    rolando.agregarArtefacto(espadaDelDestino)
+    rolando.agregarArtefacto(armaduraDeAceroValyrio)
+    rolando.agregarArtefacto(collarDivino)
 
   }
 
@@ -108,7 +102,7 @@ describe "Parte 2" {
     
     rolando.irHaciaHogar()
 
-    rolando.recolectarItem(libroDeHechizos)
+    rolando.agregarArtefacto(libroDeHechizos)
 
     assert.equals(4, libroDeHechizos.poderJuntoA(rolando))
     
@@ -124,5 +118,35 @@ describe "Parte 2" {
 
     assert.equals(0, libroDeHechizos.poderJuntoA(rolando))
   }
+
+  test "Enemigos" {
+    
+    assert.that(rolando.puedeVencerA(archibaldo))
+    rolando.pelearContra(archibaldo)
+    assert.that(rolando.puedeVencerA(astra))
+    rolando.pelearContra(astra)
+    
+    assert.equals([palacioDeMarmol, torreDeMarfil], rolando.moradasConquistadas())
+
+  }
+
+  test "Poderoso" {
+    
+    assert.notThat(rolando.esPoderosoEn(erethia))
+    rolando.poderBase(10)
+    assert.that(rolando.esPoderosoEn(erethia))
+
+  }
+
+  test "Artefacto Letal" {
+
+    rolando.poderBase(15)
+    assert.that(rolando.tieneArtefactoFatal(astra))
+    assert.equals(espadaDelDestino, rolando.artefactoFatal(astra))
+
+    assert.notThat(rolando.tieneArtefactoFatal(caterina))
+  }
 }
 
+
+  

@@ -1,30 +1,32 @@
 object rolando {
     
-    var property tamañoMochila = 2
     const mochila = #{}
     const artefactosEncontrados = []
+    const moradasConquistadas = [] 
     const hogar = castilloDePiedra
+    
     var property posActual = null
+    
     var property poderBase = 5 
+    var property tamañoMochila = 2
 
-    method historialDeArtefactosEncontrados() {
-      return artefactosEncontrados
-    }
+    method moradasConquistadas() { return moradasConquistadas }
+    method artefactosEncontrados() { return artefactosEncontrados }
 
     method encontrarArtefacto(unArtefacto) {
       artefactosEncontrados.add(unArtefacto)
 
       if(self.tieneEspacioEnMochila()){
-        self.recolectarItem(unArtefacto)
+        self.agregarArtefacto(unArtefacto)
       }
     }
 
-    method recolectarItem(unItem) {
-        self.validarRecolectarItem()
+    method agregarArtefacto(unItem) {
+        self.validarAgregarArtefacto()
         mochila.add(unItem)
     }
 
-    method validarRecolectarItem() {
+    method validarAgregarArtefacto() {
       if(not self.tieneEspacioEnMochila()){
         self.error("La mochila no cuenta con suficiente espacio")
       }
@@ -82,11 +84,35 @@ object rolando {
     }
 
     method poderTotal() {
-      return poderBase + mochila.sum({artefacto => artefacto.poderJuntoA(self)})
+      return mochila.sum({artefacto => artefacto.poderJuntoA(self)}) + poderBase
     }
 
     method artefactosEnHogar() {
       return hogar.artefactos()
+    }
+
+    method pelearContra(enemigo) {
+      if( self.puedeVencerA(enemigo) ){
+        posActual = enemigo.morada()
+        self.usarArtefactos()
+        moradasConquistadas.add(enemigo.morada())
+      }
+    }
+
+    method puedeVencerA(enemigo) {
+      return self.poderTotal() > enemigo.poder()
+    }
+
+    method esPoderosoEn(unaTierra) {
+      return unaTierra.enemigos().all({unEnemigo => self.poderTotal() > unEnemigo.poder()})
+    }
+
+    method tieneArtefactoFatal(unEnemigo) {
+      return mochila.any({unArtefacto => unArtefacto.poderJuntoA(self) > unEnemigo.poder()})
+    }
+
+    method artefactoFatal(unEnemigo) {
+      return mochila.find({unArtefacto => unArtefacto.poderJuntoA(self) > unEnemigo.poder()})
     }
 
 }
@@ -211,3 +237,47 @@ object castilloDePiedra {
   } 
 }
 
+object erethia {
+  const enemigos = #{caterina, archibaldo, astra}
+  method enemigos() { return enemigos } 
+}
+
+object fortalezaDeAcero {
+}
+
+object palacioDeMarmol {
+}
+
+object torreDeMarfil {
+}
+
+// Enemigos
+object caterina {
+  
+  var hogar = fortalezaDeAcero
+  method morada() { return hogar}
+
+  method poder() {
+    return 28
+  }
+}
+
+object archibaldo {
+  
+  var hogar = palacioDeMarmol
+  method morada() { return hogar}
+
+  method poder() {
+    return 16
+  }
+}
+
+object astra {
+  
+  var hogar = torreDeMarfil
+  method morada() { return hogar}
+
+  method poder() {
+    return 14
+  }
+}
