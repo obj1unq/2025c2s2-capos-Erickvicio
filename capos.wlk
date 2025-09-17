@@ -1,3 +1,283 @@
 object rolando {
- 
+    
+    const mochila = #{}
+    const artefactosEncontrados = []
+    const moradasConquistadas = [] 
+    const hogar = castilloDePiedra
+    
+    var property posActual = null
+    
+    var property poderBase = 5 
+    var property tamañoMochila = 2
+
+    method moradasConquistadas() { return moradasConquistadas }
+    method artefactosEncontrados() { return artefactosEncontrados }
+
+    method encontrarArtefacto(unArtefacto) {
+      artefactosEncontrados.add(unArtefacto)
+
+      if(self.tieneEspacioEnMochila()){
+        self.agregarArtefacto(unArtefacto)
+      }
+    }
+
+    method agregarArtefacto(unItem) {
+        self.validarAgregarArtefacto()
+        mochila.add(unItem)
+    }
+
+    method validarAgregarArtefacto() {
+      if(not self.tieneEspacioEnMochila()){
+        self.error("La mochila no cuenta con suficiente espacio")
+      }
+    }
+
+    method tieneEspacioEnMochila() {
+      return mochila.size() < tamañoMochila
+    }
+
+    method artefactosEnMochila() {
+      return mochila
+    }
+
+    method guardarItemsEnHogar() {
+      self.validarGuardarItemsEnHogar()
+      hogar.añadirVariosItems(mochila)
+      mochila.clear()
+    }
+
+    method irHaciaHogar() {
+      posActual = castilloDePiedra
+      self.guardarItemsEnHogar()
+    }
+
+    method estaEnHogar() {
+      return posActual == hogar
+    }
+
+    method artefactosTotales() {
+      return self.posesiones()
+    }
+
+    method poseeElArtefacto(unItem) {
+       return self.posesiones().contains(unItem)
+      // return posesiones.contains(unItem)
+    }
+
+    method posesiones() {
+      return mochila.union(hogar.artefactos())
+    }
+
+    method vaABatalla() {
+      poderBase += 1
+      self.usarArtefactos()
+    }
+
+    method usarArtefactos() {
+      mochila.forEach({artefacto => artefacto.usar()})
+    }
+
+    method validarGuardarItemsEnHogar() {
+      if (not self.estaEnHogar()){
+        self.error("Rolando no se encuentra en su hogar")
+      }
+    }
+
+    method poderTotal() {
+      return mochila.sum({artefacto => artefacto.poderJuntoA(self)}) + poderBase
+    }
+
+    method artefactosEnHogar() {
+      return hogar.artefactos()
+    }
+
+    method pelearContra(enemigo) {
+      if( self.puedeVencerA(enemigo) ){
+        posActual = enemigo.morada()
+        self.usarArtefactos()
+        moradasConquistadas.add(enemigo.morada())
+      }
+    }
+
+    method puedeVencerA(enemigo) {
+      return self.poderTotal() > enemigo.poder()
+    }
+
+    method esPoderosoEn(unaTierra) {
+      return unaTierra.enemigos().all({unEnemigo => self.poderTotal() > unEnemigo.poder()})
+    }
+
+    method tieneArtefactoFatal(unEnemigo) {
+      return mochila.any({unArtefacto => unArtefacto.poderJuntoA(self) > unEnemigo.poder()})
+    }
+
+    method artefactoFatal(unEnemigo) {
+      return mochila.find({unArtefacto => unArtefacto.poderJuntoA(self) > unEnemigo.poder()})
+    }
+
+}
+
+// Items
+object espadaDelDestino {
+
+  var usos = 0
+
+  method usar() {
+    usos += 1
+  }
+
+  method poderJuntoA(propietario) {
+
+    if( usos == 0 ){
+      return propietario.poderBase()
+    }
+    else{
+      return propietario.poderBase() / 2
+    }
+  }
+
+}
+
+object collarDivino {
+
+  var usos = 0
+
+  method usar() {
+    usos += 1
+  }
+
+  method poderJuntoA(propietario) {
+
+    if( propietario.poderBase() <= 6){
+      return 3
+    }
+    else{
+      return 3 + usos
+    }
+  }
+}
+
+object armaduraDeAceroValyrio {
+
+  var usos = 0
+
+  method usar() {
+    usos += 1
+  }
+
+  method poderJuntoA(propietario) {
+    return 6
+  }
+
+}
+
+object libroDeHechizos {
+
+  
+  var property hechizos = [bendicion, invicibilidad, invocacion] 
+
+  method usar() {
+    
+    if(not hechizos.isEmpty()){
+      hechizos = hechizos.drop(1)
+    }
+
+  }
+
+  method poderJuntoA(personaje) {
+
+    if(not hechizos.isEmpty()){
+      return hechizos.head().poder(personaje)
+    }
+    else{
+      return 0
+    }
+  }
+
+  /*Usar PoderBase para Invisivilidad*/
+}
+
+//Hechizos
+object bendicion {
+
+  method poder(psj) {
+    return 4
+  }
+}
+
+object invicibilidad {
+
+  method poder(psj) {
+    return psj.poderBase()
+  }
+}
+
+object invocacion {
+
+  method poder(psj) {
+    return psj.artefactosEnHogar().map({artefacto => artefacto.poderJuntoA(psj)}).max()
+  }
+}
+
+// Lugares
+object castilloDePiedra {
+
+  const galeriaDeItems = #{} 
+
+  method artefactos() {
+    return galeriaDeItems
+  }
+
+  method añadirItem(unItem) {
+    galeriaDeItems.add(unItem)
+  }
+
+  method añadirVariosItems(listDeItems) {
+    galeriaDeItems.addAll(listDeItems)
+  } 
+}
+
+object erethia {
+  const enemigos = #{caterina, archibaldo, astra}
+  method enemigos() { return enemigos } 
+}
+
+object fortalezaDeAcero {
+}
+
+object palacioDeMarmol {
+}
+
+object torreDeMarfil {
+}
+
+// Enemigos
+object caterina {
+  
+  var hogar = fortalezaDeAcero
+  method morada() { return hogar}
+
+  method poder() {
+    return 28
+  }
+}
+
+object archibaldo {
+  
+  var hogar = palacioDeMarmol
+  method morada() { return hogar}
+
+  method poder() {
+    return 16
+  }
+}
+
+object astra {
+  
+  var hogar = torreDeMarfil
+  method morada() { return hogar}
+
+  method poder() {
+    return 14
+  }
 }
