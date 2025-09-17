@@ -5,6 +5,7 @@ object rolando {
     const artefactosEncontrados = []
     const hogar = castilloDePiedra
     var property posActual = null
+    var property poderBase = 5 
 
     method historialDeArtefactosEncontrados() {
       return artefactosEncontrados
@@ -65,6 +66,15 @@ object rolando {
       return mochila.union(hogar.artefactos())
     }
 
+    method vaABatalla() {
+      poderBase += 1
+      self.usarArtefactos()
+    }
+
+    method usarArtefactos() {
+      mochila.forEach({artefacto => artefacto.usar()})
+    }
+
     method validarGuardarItemsEnHogar() {
       if (not self.estaEnHogar()){
         self.error("Rolando no se encuentra en su hogar")
@@ -74,19 +84,80 @@ object rolando {
 }
 
 // Items
-object espadaDelDestino { 
+object espadaDelDestino {
+
+  var usos = 0
+
+  method usar() {
+    usos += 1
+  }
+
+  method poderJuntoA(propietario) {
+
+    if( usos == 0 ){
+      return propietario.poderBase()
+    }
+    else{
+      return propietario.poderBase() / 2
+    }
+  }
+
 }
 
 object libroDeHechizos {
+
+  var usos = 0
+  var property propietario = rolando
+
+  method usar() {
+    usos += 1
+  }
+
+  method poder() {
+
+    if( usos == 0 ){
+      return propietario.poderBase()
+    }
+    else{
+      return propietario.poderBase() / 2
+    }
+  }
 }
 
 object collarDivino {
+
+  var usos = 0
+
+  method usar() {
+    usos += 1
+  }
+
+  method poderJuntoA(propietario) {
+
+    if( propietario.poderBase() < 6){
+      return 3
+    }
+    else{
+      return 3 + usos
+    }
+  }
 }
 
 object armaduraDeAceroValyrio {
+
+  var usos = 0
+
+  method usar() {
+    usos += 1
+  }
+
+  method poderJuntoA(propietario) {
+    return 6
+  }
+
 }
 
-//
+// Lugares
 object castilloDePiedra {
 
   const galeriaDeItems = #{} 

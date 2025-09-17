@@ -1,6 +1,6 @@
 import capos.*
 
-describe "Rolando" {
+describe "Parte 1" {
   test "mini aventura" {
     
     rolando.recolectarItem(espadaDelDestino)
@@ -56,5 +56,51 @@ describe "Rolando" {
 
 
 
+
+}
+
+describe "Parte 2" {
+
+  method initialize() {
+    rolando.poderBase(5)
+    rolando.tamañoMochila(3)
+    rolando.recolectarItem(espadaDelDestino)
+    rolando.recolectarItem(armaduraDeAceroValyrio)
+    rolando.recolectarItem(collarDivino)
+
+  }
+
+  test "Comportamiento de los artefactos" {
+    
+    assert.equals(5, rolando.poderBase())
+    assert.equals(5, espadaDelDestino.poderJuntoA(rolando))
+    assert.equals(6, armaduraDeAceroValyrio.poderJuntoA(rolando))
+    assert.equals(3, collarDivino.poderJuntoA(rolando))
+
+    rolando.vaABatalla()
+
+    assert.equals(3, espadaDelDestino.poderJuntoA(rolando))
+    assert.equals(6, armaduraDeAceroValyrio.poderJuntoA(rolando))
+    assert.equals(3, collarDivino.poderJuntoA(rolando))
+
+    rolando.vaABatalla()
+
+    assert.equals(7, rolando.poderBase())
+    assert.equals(3.5, espadaDelDestino.poderJuntoA(rolando))
+    assert.equals(6, armaduraDeAceroValyrio.poderJuntoA(rolando))
+    assert.equals(5, collarDivino.poderJuntoA(rolando))
+
+    rolando.vaABatalla()
+
+    assert.equals(8, rolando.poderBase())
+    assert.equals(4, espadaDelDestino.poderJuntoA(rolando))
+    assert.equals(6, armaduraDeAceroValyrio.poderJuntoA(rolando))
+    assert.equals(6, collarDivino.poderJuntoA(rolando))
+  }
+  
+  test "Poder Total de rolando" {
+    
+    assert.equals(19, rolando.poderTotal())
+  }
 
 }
