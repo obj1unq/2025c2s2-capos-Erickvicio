@@ -81,6 +81,14 @@ object rolando {
       }
     }
 
+    method poderTotal() {
+      return poderBase + mochila.sum({artefacto => artefacto.poderJuntoA(self)})
+    }
+
+    method artefactosEnHogar() {
+      return hogar.artefactos()
+    }
+
 }
 
 // Items
@@ -102,26 +110,6 @@ object espadaDelDestino {
     }
   }
 
-}
-
-object libroDeHechizos {
-
-  var usos = 0
-  var property propietario = rolando
-
-  method usar() {
-    usos += 1
-  }
-
-  method poder() {
-
-    if( usos == 0 ){
-      return propietario.poderBase()
-    }
-    else{
-      return propietario.poderBase() / 2
-    }
-  }
 }
 
 object collarDivino {
@@ -157,6 +145,54 @@ object armaduraDeAceroValyrio {
 
 }
 
+object libroDeHechizos {
+
+  
+  var property hechizos = [bendicion, invicibilidad, invocacion] 
+
+  method usar() {
+    
+    if(not hechizos.isEmpty()){
+      hechizos = hechizos.drop(1)
+    }
+
+  }
+
+  method poderJuntoA(personaje) {
+
+    if(not hechizos.isEmpty()){
+      return hechizos.head().poder(personaje)
+    }
+    else{
+      return 0
+    }
+  }
+
+  /*Usar PoderBase para Invisivilidad*/
+}
+
+//Hechizos
+object bendicion {
+
+  method poder(psj) {
+    return 4
+  }
+}
+
+object invicibilidad {
+
+  method poder(psj) {
+    return psj.poderBase()
+  }
+}
+
+object invocacion {
+
+  method poder(psj) {
+    return psj.artefactosEnHogar().map({artefacto => artefacto.poderJuntoA(psj)}).max()
+  }
+}
+
 // Lugares
 object castilloDePiedra {
 
@@ -172,6 +208,6 @@ object castilloDePiedra {
 
   method añadirVariosItems(listDeItems) {
     galeriaDeItems.addAll(listDeItems)
-  }
-  
+  } 
 }
+

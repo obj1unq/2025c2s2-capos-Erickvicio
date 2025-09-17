@@ -104,4 +104,25 @@ describe "Parte 2" {
     assert.equals(19, rolando.poderTotal())
   }
 
+  test "Libro de Hechizos" {
+    
+    rolando.irHaciaHogar()
+
+    rolando.recolectarItem(libroDeHechizos)
+
+    assert.equals(4, libroDeHechizos.poderJuntoA(rolando))
+    
+    rolando.vaABatalla()
+
+    assert.equals(6, libroDeHechizos.poderJuntoA(rolando))
+
+    rolando.vaABatalla()
+
+    assert.equals(7, libroDeHechizos.poderJuntoA(rolando))
+
+    rolando.vaABatalla()
+
+    assert.equals(0, libroDeHechizos.poderJuntoA(rolando))
+  }
 }
+
