@@ -79,6 +79,7 @@ describe "Parte 2" {
 
     rolando.vaABatalla()
 
+    assert.equals(6, rolando.poderBase())
     assert.equals(3, espadaDelDestino.poderJuntoA(rolando))
     assert.equals(6, armaduraDeAceroValyrio.poderJuntoA(rolando))
     assert.equals(3, collarDivino.poderJuntoA(rolando))

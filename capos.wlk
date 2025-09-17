@@ -134,7 +134,7 @@ object collarDivino {
 
   method poderJuntoA(propietario) {
 
-    if( propietario.poderBase() < 6){
+    if( propietario.poderBase() <= 6){
       return 3
     }
     else{
